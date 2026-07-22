@@ -83,13 +83,11 @@ LEVELS = {
 # ---------------------------------------------------------------------------
 # CLIENTS
 # ---------------------------------------------------------------------------
-@st.cache_resource
 def get_groq():
     key = _secret("GROQ_API_KEY")
     return Groq(api_key=key) if key else None
 
 
-@st.cache_resource
 def get_gemini():
     key = _secret("GEMINI_API_KEY")
     if key and _HAS_GEMINI_SDK:
@@ -337,6 +335,10 @@ with st.sidebar:
     st.header("⚙️ Réglages")
     level = st.selectbox("Ton niveau d'anglais", list(LEVELS.keys()), index=0)
     tts_on = st.toggle("Écouter les réponses (voix)", value=True)
+
+    # Détecteur de clés (n'affiche jamais la clé elle-même)
+    st.caption(f"Clé Gemini : {'✅ détectée' if _secret('GEMINI_API_KEY') else '❌ absente'}")
+    st.caption(f"Clé Groq : {'✅ détectée' if _secret('GROQ_API_KEY') else '❌ absente'}")
 
     # État de la chaîne de secours
     g_ok = get_gemini() is not None
